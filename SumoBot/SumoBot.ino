@@ -81,21 +81,23 @@ void setup()
 void loop()
 {
   readColorSensor();
- // if (crossLine == true)
-  {
-    // SMART BACKWARD
+  if (crossLine == true)
+  {  // SMART BACKWARD
+    m1Backward(MAX_SPEED);
+    m2Backward(MAX_SPEED);
+    delay(2000);
   }
-//  else // CrossLine == false == in battlefield
+  else // CrossLine == false == in battlefield
   {
-//     if (distance >= distanceThreshold)
+     if (getDistance() <= distanceThreshold)
      {  // ATTACK
-   //     m1Forward(MAX_SPEED); 
-    //    m1Forward(MAX_SPEED);
+        m1Forward(MAX_SPEED); 
+        m1Forward(MAX_SPEED);
      }
-//     else
-     {  // FIND OPPONENT 
-     //   m1Forward(MAX_SPEED);
-     //   m2Backward(MAX_SPEED);
+      else
+     {  // FIND OPPONENT  // ROTATE
+        m1Forward(MAX_SPEED-55);
+        m2Backward(MAX_SPEED-55);
      }
   }
 }

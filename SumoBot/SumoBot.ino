@@ -23,8 +23,11 @@
   #define S1 A1
   #define S2 A2
   #define S3 A3
- // #define S4 A4
   #define sensorOut A4
+
+  // ULTRASONIC SENSOR
+  #define TRIG_PIN 0
+  #define ECHO_PIN 1
   
   // OTHERS ///////////
   #define rThreshold 50
@@ -47,6 +50,7 @@ void m2Forward(int speed);
 void m2Backward(int speed);
 void readColorSensor();
 bool crossLine();
+float getDistance();
 ////////////////////////////////////////////////////
 
 void setup()
@@ -193,3 +197,19 @@ bool crossLine(){
     return false;
 }
 
+float getDistance(){
+  long duration, distanceCm;
+   
+  digitalWrite(TRIG_PIN, LOW);
+  delayMicroseconds(2);
+  digitalWrite(TRIG_PIN, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG_PIN, LOW);
+  
+  duration = pulseIn(ECHO_PIN, HIGH, TIME_OUT);
+ 
+  // convert to distance
+  distanceCm = duration / 29.1 / 2;
+  
+  return distanceCm;
+}

@@ -28,6 +28,7 @@
   // ULTRASONIC SENSOR
   #define TRIG_PIN 0
   #define ECHO_PIN 1
+  #define TIME_OUT 5000
   
   // OTHERS ///////////
   #define rThreshold 50

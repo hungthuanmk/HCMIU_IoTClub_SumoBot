@@ -20,6 +20,9 @@
 #define DEBUG  true
 
 // DEFINITION //////////////////////////////////////
+
+  #define OPPONENT_DISTANCE 40
+
   // MOTOR /////////////
   #define IN1 8
   #define IN2 9
@@ -49,7 +52,7 @@
   // USgreen SENSOR          //USgreen     GND->14  ECHO->15  TRIG->16  VCC->17
   #define TRIG_g 16
   #define ECHO_g 15
-  #define MAX_DISTANCE_g 50
+  #define MAX_DISTANCE_g OPPONENT_DISTANCE
   #define VCC_g 17
   #define GND_g 14
   NewPing USgreen(TRIG_g, ECHO_g, MAX_DISTANCE_g);
@@ -57,7 +60,7 @@
   // USblue SENSOR          //USblue      GND->7   ECHO->6   TRIG->5   VCC->4
   #define TRIG_b 5
   #define ECHO_b 6
-  #define MAX_DISTANCE_b 50
+  #define MAX_DISTANCE_b OPPONENT_DISTANCE
   #define VCC_b 4
   #define GND_b 7
   NewPing USblue(TRIG_b, ECHO_b, MAX_DISTANCE_b);
@@ -68,6 +71,9 @@
   #define bThreshold 50
   #define cThreshold 50
   #define distanceThreshold 40
+
+  #define LED_GND 21
+  #define LED_VCC 20
 ////////////////////////////////////////////////////
 
 // VARIABLES //////////////////////////////////////
@@ -87,6 +93,9 @@ bool crossedLine();
 
 void setup()
 {
+  pinMode(LED_VCC, OUTPUT);
+  pinMode(LED_GND, OUTPUT);
+  digitalWrite(LED_GND, LOW);
   //motor setup
   pinMode(IN1, OUTPUT);
   pinMode(IN2, OUTPUT);
@@ -138,17 +147,22 @@ void setup()
   
 void loop()
 {
- // m1Backward(80);
+ // m1Backward(100);
  //analogWrite(IN4, 100);
-//  m1Backward(50);
- // readColorSensor(BLUE);
- //int a = USblue.ping_cm();
-// if (a!=0)
- // Serial.println(a);
- // delay(10);
- 
- // digitalWrite(IN1, HIGH);// dont need to use PWM
- // analogWrite(IN2, 255 - 155);  
+ // m2Forward(100);
+  digitalWrite(LED_VCC, !digitalRead(LED_VCC));
+  delay(10);
+  if (USgreen.ping_cm()!=0)
+    {
+      m1Backward(100);
+      m2Backward(100);
+    }
+   else
+    {
+      m1Forward(50);
+      m2Backward(50);
+    }
+  /*
   if (readColorSensor(GREEN) < 10 || readColorSensor(BLUE) < 10)
   {
     m1Backward(100);
@@ -167,6 +181,7 @@ void loop()
       m2Forward(100);
     }
   }
+  */
 }
 
 void m1Stop(){

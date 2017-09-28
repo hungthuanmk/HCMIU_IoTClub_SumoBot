@@ -81,7 +81,7 @@ void m1Forward(int speed);
 void m1Backward(int speed);
 void m2Forward(int speed);
 void m2Backward(int speed);
-void readColorSensor(int GREENorBLUE);
+int readColorSensor(int GREENorBLUE);
 bool crossedLine();
 ////////////////////////////////////////////////////
 
@@ -127,7 +127,7 @@ void setup()
   digitalWrite(VCC_b, HIGH);
   digitalWrite(GND_b, LOW);
  
-// analogWrite(IN4, 50);
+  //analogWrite(IN4, 100);
   if (DEBUG)
     Serial.begin(9600);
 
@@ -138,13 +138,35 @@ void setup()
   
 void loop()
 {
-  m2Forward(100);
+ // m1Backward(80);
+ //analogWrite(IN4, 100);
 //  m1Backward(50);
  // readColorSensor(BLUE);
  //int a = USblue.ping_cm();
 // if (a!=0)
  // Serial.println(a);
  // delay(10);
+ 
+ // digitalWrite(IN1, HIGH);// dont need to use PWM
+ // analogWrite(IN2, 255 - 155);  
+  if (readColorSensor(GREEN) < 10 || readColorSensor(BLUE) < 10)
+  {
+    m1Backward(100);
+    m2Backward(100);
+  }
+  else
+  {
+    if (USgreen.ping_cm() < 40)
+    {
+      m1Forward(100);
+      m2Forward(100);
+    }
+    else
+    {
+      m1Backward(100);
+      m2Forward(100);
+    }
+  }
 }
 
 void m1Stop(){
@@ -181,7 +203,7 @@ void m2Backward(int speed){
   digitalWrite(IN3, HIGH);// dont need to use PWM
 }
 
-void readColorSensor(int GREENorBLUE){
+int readColorSensor(int GREENorBLUE){
   int s2,s3, out;
   if (GREENorBLUE == GREEN)
   { //green
@@ -245,8 +267,7 @@ void readColorSensor(int GREENorBLUE){
     Serial.print(B);
     Serial.print("\n");
   }
-  delay(5);
- 
+  return C;
 }
 
 bool crossedLine(){
